@@ -841,6 +841,75 @@ void WaveshareEPaper4P2InBV2::dump_config() {
   LOG_UPDATE_INTERVAL(this);
 }
 
+/* 4.2in-bc */
+
+void WaveshareEPaper4P2BC::initialize() {
+  /* The command sequence is similar to the 7P5In display but differs in subtle ways
+  to allow for faster updates. */
+  // COMMAND POWER SETTING
+  this->command(0x01);
+  this->data(0x03);   // VDS_EN, VDG_EN internal
+  this->Data (0x00);   // VCOM_HV, VGHL_LV=16V
+  this->Data (0x2b);   // VDH=11V
+  this->Data (0x2b);   // VDL=11V
+
+  // COMMAND PANEL SETTING
+  this->command(0x00);
+  this->data(0x3f);    // 300x400 B/W mode, LUT set by register
+  
+  // COMMAND PLL CONTROL
+  this->command(0x30);
+  this->data(0x3A);
+
+  // COMMAND VCM_DC_SETTING: all temperature range
+  this->command(0x82);
+  this->data(0x28);
+
+  // COMMAND BOOSTER SOFT START
+  this->command(0x06);
+  this->data(0x17);
+  this->data(0x17);
+  this->data(0x17);
+
+  // COMMAND VCOM AND DATA INTERVAL SETTING
+  this->command(0x50);
+  this->data(0x77);
+
+  // COMMAND TCON SETTING
+  this->command(0x60);
+  this->data(0x22);
+
+  // COMMAND FLASH CONTROL
+  this->command(0x65);
+  this->data(0x00);
+
+  // COMMAND RESOLUTION SETTING
+  this->command(0x61);
+  this->data(400 / 256);  // 640 >> 8
+  this->data(400 % 256);  // 640 >> 8
+  this->data(0x80);
+  this->data(HEIGHT / 256);  // 384 >> 8
+  this->data(HEIGHT % 256);  // 640 >> 8
+  this->data(0x80);
+
+  // COMMAND FLASH MODE
+  this->command(0xE5);
+  this->data(0x03);
+}
+
+int WaveshareEPaper4P2InBC::get_width_internal() { return 400; }
+
+int WaveshareEPaper4P2InBC::get_height_internal() { return 300; }
+
+void WaveshareEPaper4P2InBC::dump_config() {
+  LOG_DISPLAY("", "Waveshare E-Paper", this);
+  ESP_LOGCONFIG(TAG, "  Model: 4.2in-bc");
+  LOG_PIN("  Reset Pin: ", this->reset_pin_);
+  LOG_PIN("  DC Pin: ", this->dc_pin_);
+  LOG_PIN("  Busy Pin: ", this->busy_pin_);
+  LOG_UPDATE_INTERVAL(this);
+}
+
 void WaveshareEPaper5P8In::initialize() {
   // COMMAND POWER SETTING
   this->command(0x01);
@@ -1281,6 +1350,9 @@ void WaveshareEPaper7P5InV2alt::dump_config() {
   LOG_PIN("  Busy Pin: ", this->busy_pin_);
   LOG_UPDATE_INTERVAL(this);
 }
+
+
+
 
 /* 7.50in-bc */
 void WaveshareEPaper7P5InBC::initialize() {
