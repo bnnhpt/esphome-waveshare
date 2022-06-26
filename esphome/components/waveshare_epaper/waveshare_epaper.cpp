@@ -843,15 +843,15 @@ void WaveshareEPaper4P2InBV2::dump_config() {
 
 /* 4.2in-bc */
 
-void WaveshareEPaper4P2BC::initialize() {
+void WaveshareEPaper4P2InBC::initialize() {
   /* The command sequence is similar to the 7P5In display but differs in subtle ways
   to allow for faster updates. */
   // COMMAND POWER SETTING
   this->command(0x01);
   this->data(0x03);   // VDS_EN, VDG_EN internal
-  this->Data (0x00);   // VCOM_HV, VGHL_LV=16V
-  this->Data (0x2b);   // VDH=11V
-  this->Data (0x2b);   // VDL=11V
+  this->data (0x00);   // VCOM_HV, VGHL_LV=16V
+  this->data (0x2b);   // VDH=11V
+  this->data (0x2b);   // VDL=11V
 
   // COMMAND PANEL SETTING
   this->command(0x00);
@@ -888,8 +888,8 @@ void WaveshareEPaper4P2BC::initialize() {
   this->data(400 / 256);  // 640 >> 8
   this->data(400 % 256);  // 640 >> 8
   this->data(0x80);
-  this->data(HEIGHT / 256);  // 384 >> 8
-  this->data(HEIGHT % 256);  // 640 >> 8
+  this->data(300 / 256);  // 384 >> 8
+  this->data(300 % 256);  // 640 >> 8
   this->data(0x80);
 
   // COMMAND FLASH MODE
