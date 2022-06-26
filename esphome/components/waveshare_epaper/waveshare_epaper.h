@@ -121,6 +121,7 @@ enum WaveshareEPaperTypeBModel {
   WAVESHARE_EPAPER_2_7_IN = 0,
   WAVESHARE_EPAPER_4_2_IN,
   WAVESHARE_EPAPER_4_2_IN_B_V2,
+  WAVESHARE_EPAPER_4_2_IN_BC,
   WAVESHARE_EPAPER_7_5_IN,
   WAVESHARE_EPAPER_7_5_INV2,
   WAVESHARE_EPAPER_7_5_IN_B_V2,
@@ -221,6 +222,34 @@ class WaveshareEPaper4P2InBV2 : public WaveshareEPaper {
     // COMMAND VCOM AND DATA INTERVAL SETTING
     this->command(0x50);
     this->data(0xF7);  // border floating
+
+    // COMMAND POWER OFF
+    this->command(0x02);
+    this->wait_until_idle_();
+
+    // COMMAND DEEP SLEEP
+    this->command(0x07);
+    this->data(0xA5);  // check code
+  }
+
+ protected:
+  int get_width_internal() override;
+
+  int get_height_internal() override;
+};
+
+class WaveshareEPaper4P2InBC : public WaveshareEPaper {
+ public:
+  void initialize() override;
+
+  void display() override;
+
+  void dump_config() override;
+
+  void deep_sleep() override {
+    // COMMAND VCOM AND DATA INTERVAL SETTING
+  //  this->command(0x50);
+  //  this->data(0xF7);  // border floating
 
     // COMMAND POWER OFF
     this->command(0x02);
