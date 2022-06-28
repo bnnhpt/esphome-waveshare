@@ -846,6 +846,7 @@ void WaveshareEPaper4P2InBV2::dump_config() {
 void WaveshareEPaper4P2BC::initialize() {
   /*  */
   // Reset
+  ESP_LOGCONFIG(TAG, "  init");
   this->reset_pin_->digital_write(true);
   delay(200);  // NOLINT
   this->reset_pin_->digital_write(false);
@@ -903,6 +904,7 @@ void WaveshareEPaper4P2BC::initialize() {
   this->data(0x03);*/
 
   // COMMAND BOOSTER SOFT START
+  ESP_LOGCONFIG(TAG, "  booster soft");
   this->command(0x06);
   this->data(0x17);
   this->data(0x17);
@@ -916,6 +918,35 @@ void WaveshareEPaper4P2BC::initialize() {
   this->command(0x00);
   this->data(0x1F);    // 300x400 B/W mode, LUT from OTP
   
+}
+
+void HOT WaveshareEPaper4P2InBC::display() {
+  // COMMAND DATA START TRANSMISSION 1 (B/W data)
+  ESP_LOGCONFIG(TAG, "  transmission");
+  this->command(0x10);
+  this->start_data_();
+  this->write_array(this->buffer_, this->get_buffer_length_());
+  this->end_data_();
+
+  // COMMAND DATA START TRANSMISSION 2 (RED data)
+  this->command(0x13);
+  this->start_data_();
+  for (size_t i = 0; i < this->get_buffer_length_(); i++)
+    this->write_byte(0xFF);
+  this->end_data_();
+  delay(2);
+
+  // COMMAND DISPLAY REFRESH
+  this->command(0x12);
+  delay(100);
+  this->wait_until_idle_();
+
+  // COMMAND POWER OFF
+  // NOTE: power off < deep sleep
+  this->command(0x02);   // Power OFF
+  this->wait_until_idle_();
+  this->command(0x07);   //Deep sleep
+  this->data(0xA5);
 }
 
 int WaveshareEPaper4P2InBC::get_width_internal() { return 400; }
