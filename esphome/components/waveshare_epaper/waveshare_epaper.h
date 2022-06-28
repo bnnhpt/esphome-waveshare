@@ -252,7 +252,8 @@ class WaveshareEPaper4P2InBC : public WaveshareEPaper {
   //  this->data(0xF7);  // border floating
 
     // COMMAND POWER OFF
-    this->command(0x02);
+    ESP_LOGCONFIG(TAG, "  power off");
+	this->command(0x02);
     this->wait_until_idle_();
 
     // COMMAND DEEP SLEEP
