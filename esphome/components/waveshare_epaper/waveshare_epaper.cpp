@@ -843,15 +843,21 @@ void WaveshareEPaper4P2InBV2::dump_config() {
 
 /* 4.2in-bc */
 
-void WaveshareEPaper4P2InBC::initialize() {
-  /* The command sequence is similar to the 7P5In display but differs in subtle ways
-  to allow for faster updates. */
-  // COMMAND POWER SETTING
+void WaveshareEPaper4P2BC::initialize() {
+  /*  */
+  // Reset
+  this->reset_pin_->digital_write(true);
+  delay(200);  // NOLINT
+  this->reset_pin_->digital_write(false);
+  delay(200);  // NOLINT
+  this->reset_pin_->digital_write(true);
+  delay(200);  // NOLINT
+  /* COMMAND POWER SETTING
   this->command(0x01);
   this->data(0x03);   // VDS_EN, VDG_EN internal
-  this->data (0x00);   // VCOM_HV, VGHL_LV=16V
-  this->data (0x2b);   // VDH=11V
-  this->data (0x2b);   // VDL=11V
+  this->data(0x00);   // VCOM_HV, VGHL_LV=16V
+  this->data(0x2b);   // VDH=11V
+  this->data(0x2b);   // VDL=11V
 
   // COMMAND PANEL SETTING
   this->command(0x00);
@@ -888,13 +894,28 @@ void WaveshareEPaper4P2InBC::initialize() {
   this->data(400 / 256);  // 640 >> 8
   this->data(400 % 256);  // 640 >> 8
   this->data(0x80);
-  this->data(300 / 256);  // 384 >> 8
-  this->data(300 % 256);  // 640 >> 8
+  this->data(HEIGHT / 256);  // 384 >> 8
+  this->data(HEIGHT % 256);  // 640 >> 8
   this->data(0x80);
 
   // COMMAND FLASH MODE
   this->command(0xE5);
-  this->data(0x03);
+  this->data(0x03);*/
+
+  // COMMAND BOOSTER SOFT START
+  this->command(0x06);
+  this->data(0x17);
+  this->data(0x17);
+  this->data(0x17);
+  
+  // POWER ON
+  this->command(0x04);
+  this->wait_until_idle_();
+  
+  // COMMAND PANEL SETTING
+  this->command(0x00);
+  this->data(0x1F);    // 300x400 B/W mode, LUT from OTP
+  
 }
 
 int WaveshareEPaper4P2InBC::get_width_internal() { return 400; }
