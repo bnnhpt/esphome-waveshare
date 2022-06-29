@@ -918,6 +918,12 @@ void WaveshareEPaper4P2BC::initialize() {
   this->command(0x00);
   this->data(0x1F);    // 300x400 B/W mode, LUT from OTP
   
+  this->command(0x50);
+  this->data(0xF7);    // VCOM_AND_DATA_INTERVAL_SETTING
+  
+  this->command(0x10);//DATA_START_TRANSMISSION_1
+  delay(2);    
+  
 }
 
 void HOT WaveshareEPaper4P2InBC::display() {
