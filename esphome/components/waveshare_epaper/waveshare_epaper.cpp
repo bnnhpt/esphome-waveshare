@@ -794,11 +794,21 @@ void WaveshareEPaper4P2In::dump_config() {
 void WaveshareEPaper4P2InBV2::initialize() {
   // these exact timings are required for a proper reset/init
   ESP_LOGI("display", "initialize");
-  this->reset_pin_->digital_write(false);
-  delay(2);
   this->reset_pin_->digital_write(true);
   delay(200);  // NOLINT
+  this->reset_pin_->digital_write(false);
+  delay(2);  // NOLINT
+  this->reset_pin_->digital_write(true);
+  delay(200);  // NOLINT
+  this->wait_until_idle_();
 
+  // COMMAND BOOSTER SOFT START
+  ESP_LOGI("display", "COMMAND BOOSTER SOFT START");
+  this->command(0x06);
+  this->data(0x17);
+  this->data(0x17);
+  this->data(0x17);
+  
   // COMMAND POWER ON
   ESP_LOGI("display", "POWER ON");
   this->command(0x04);
@@ -807,7 +817,11 @@ void WaveshareEPaper4P2InBV2::initialize() {
   // COMMAND PANEL SETTING
   ESP_LOGI("display", "PANEL SETTING");
   this->command(0x00);
-  this->data(0x0f);  // LUT from OTP
+  this->data(0x1f);  // 300x400 B/W Mode, LUT from OTP
+  this->command(0x50);
+  this->data(0xF7);    // VCOM_AND_DATA_INTERVAL_SETTING
+  this->command(0x10);//DATA_START_TRANSMISSION_1
+  delay(2);    
 }
 
 void HOT WaveshareEPaper4P2InBV2::display() {
