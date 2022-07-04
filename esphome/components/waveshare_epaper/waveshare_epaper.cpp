@@ -853,7 +853,7 @@ void HOT WaveshareEPaper4P2InBV2::display() {
 }
 int WaveshareEPaper4P2InBV2::get_width_internal() { return 400; }
 int WaveshareEPaper4P2InBV2::get_height_internal() { return 300; }
-uint32_t WaveshareEPaper4P2InBV2::idle_timeout_() { return 5000; }
+uint32_t WaveshareEPaper4P2InBV2::idle_timeout_() { return 500; }
 void WaveshareEPaper4P2InBV2::dump_config() {
   LOG_DISPLAY("", "Waveshare E-Paper", this);
   ESP_LOGCONFIG(TAG, "  Model: 4.2in (B V2)");
