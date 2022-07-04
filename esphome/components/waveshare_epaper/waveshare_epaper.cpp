@@ -846,7 +846,7 @@ void WaveshareEPaper4P2InBV2::dump_config() {
 void WaveshareEPaper4P2BC::initialize() {
   /*  */
   // Reset
-  ESP_LOGCONFIG(TAG, "  init");
+  //ESP_LOGCONFIG(TAG, "  init");
   this->reset_pin_->digital_write(true);
   delay(200);  // NOLINT
   this->reset_pin_->digital_write(false);
