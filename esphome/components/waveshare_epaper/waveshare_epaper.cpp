@@ -793,16 +793,19 @@ void WaveshareEPaper4P2In::dump_config() {
 // ========================================================
 void WaveshareEPaper4P2InBV2::initialize() {
   // these exact timings are required for a proper reset/init
+  ESP_LOGI("display", "initialize");
   this->reset_pin_->digital_write(false);
   delay(2);
   this->reset_pin_->digital_write(true);
   delay(200);  // NOLINT
 
   // COMMAND POWER ON
+  ESP_LOGI("display", "POWER ON");
   this->command(0x04);
   this->wait_until_idle_();
 
   // COMMAND PANEL SETTING
+  ESP_LOGI("display", "PANEL SETTING");
   this->command(0x00);
   this->data(0x0f);  // LUT from OTP
 }
@@ -831,6 +834,7 @@ void HOT WaveshareEPaper4P2InBV2::display() {
 
   // COMMAND POWER OFF
   // NOTE: power off < deep sleep
+  ESP_LOGI("display", "power off");
   this->command(0x02);
 }
 int WaveshareEPaper4P2InBV2::get_width_internal() { return 400; }
