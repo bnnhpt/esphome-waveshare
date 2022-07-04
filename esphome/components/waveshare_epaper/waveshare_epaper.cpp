@@ -800,7 +800,7 @@ void WaveshareEPaper4P2InBV2::initialize() {
   delay(2);  // NOLINT
   this->reset_pin_->digital_write(true);
   delay(200);  // NOLINT
-  this->wait_until_idle_();
+  //this->wait_until_idle_();
 
   // COMMAND BOOSTER SOFT START
   ESP_LOGI("display", "COMMAND BOOSTER SOFT START");
@@ -837,7 +837,7 @@ void HOT WaveshareEPaper4P2InBV2::display() {
   this->command(0x13);
   this->start_data_();
   for (size_t i = 0; i < this->get_buffer_length_(); i++)
-    this->write_byte(0xFF);
+    this->write_byte(0x00);
   this->end_data_();
   delay(2);
 
@@ -853,7 +853,7 @@ void HOT WaveshareEPaper4P2InBV2::display() {
 }
 int WaveshareEPaper4P2InBV2::get_width_internal() { return 400; }
 int WaveshareEPaper4P2InBV2::get_height_internal() { return 300; }
-uint32_t WaveshareEPaper4P2InBV2::idle_timeout_() { return 500; }
+//uint32_t WaveshareEPaper4P2InBV2::idle_timeout_() { return 500; }
 void WaveshareEPaper4P2InBV2::dump_config() {
   LOG_DISPLAY("", "Waveshare E-Paper", this);
   ESP_LOGCONFIG(TAG, "  Model: 4.2in (B V2)");
