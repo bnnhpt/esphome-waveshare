@@ -809,12 +809,14 @@ void WaveshareEPaper4P2InBV2::initialize() {
 
 void HOT WaveshareEPaper4P2InBV2::display() {
   // COMMAND DATA START TRANSMISSION 1 (B/W data)
+  ESP_LOGI("display", "Transmission1 0x10");
   this->command(0x10);
   this->start_data_();
   this->write_array(this->buffer_, this->get_buffer_length_());
   this->end_data_();
 
   // COMMAND DATA START TRANSMISSION 2 (RED data)
+  ESP_LOGI("display", "Transmission2 0x13");
   this->command(0x13);
   this->start_data_();
   for (size_t i = 0; i < this->get_buffer_length_(); i++)
@@ -823,6 +825,7 @@ void HOT WaveshareEPaper4P2InBV2::display() {
   delay(2);
 
   // COMMAND DISPLAY REFRESH
+  ESP_LOGI("display", "Refresh");
   this->command(0x12);
   this->wait_until_idle_();
 
